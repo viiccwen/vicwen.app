@@ -5,8 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { MarkdownContent } from '@/components/MarkdownContent'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { education, experience, honors, openSource, profile, projects, socials, talks } from '@/data/site'
+import { education, experience, honors, openSource, profile, socials, talks } from '@/data/site'
 import { getBlogPost, getBlogPosts, hasBlogPost } from '@/lib/blog'
 import { defaultLocale, isLocale, localeLabel, locales, type Locale } from '@/lib/i18n'
 import { messages } from '@/lib/messages'
@@ -301,40 +300,7 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
         }))} />
       </Section>
 
-      <Section id="projects" index="05" label="Projects">
-        <div className="space-y-4">
-          {projects.map((project) => (
-            <Card className="group overflow-hidden hover:border-violet-500/30" key={project.title}>
-              <div className="grid gap-0 sm:grid-cols-[12rem_1fr]">
-                <img alt="" className="h-44 w-full object-cover opacity-80 transition duration-500 group-hover:scale-105 group-hover:opacity-100 sm:h-full" src={project.imageUrl} />
-                <div>
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <CardTitle className="text-xl group-hover:text-violet-200">{project.title}</CardTitle>
-                        <CardDescription>{project.year} · {project.status}</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm leading-7 text-zinc-400">{project.description}</p>
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {project.stack.map((tech) => <Badge key={tech} variant="outline">{tech}</Badge>)}
-                    </div>
-                    <div className="mt-5">
-                      <a className="text-xs uppercase tracking-[0.18em] text-violet-300 transition hover:text-violet-200" href={project.links[0]?.href} rel="noreferrer" target="_blank">
-                        {project.links[0]?.label} →
-                      </a>
-                    </div>
-                  </CardContent>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </Section>
-
-      <Section id="honors" index="06" label="Honors">
+      <Section id="honors" index="05" label="Honors">
         <Timeline items={honors.map((item) => ({
           title: item.title,
           subtitle: item.subtitle,
@@ -346,7 +312,7 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
         }))} />
       </Section>
 
-      <Section id="talks" index="07" label="Talks">
+      <Section id="talks" index="06" label="Talks">
         <Timeline items={talks.map((item) => ({
           title: item.title,
           subtitle: `${item.subtitle} · ${item.topic}`,
