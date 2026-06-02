@@ -393,8 +393,8 @@ function Timeline({ items }: { items: Array<{ title: string; subtitle: string; p
 
 function Logo({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-2xl border border-white/10 bg-white p-1 shadow-lg shadow-black/20">
-      <img alt={`${alt} logo`} className="max-h-full max-w-full object-contain" src={src} />
+    <div className="logo-frame grid size-11 shrink-0 place-items-center overflow-hidden rounded-lg border border-white/10 bg-white/[0.04] shadow-lg shadow-black/20">
+      <img alt={`${alt} logo`} className="size-full rounded-md object-contain" src={src} />
     </div>
   )
 }
