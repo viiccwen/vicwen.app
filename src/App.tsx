@@ -531,10 +531,10 @@ function BlogPostPage({ locale, slug, onNavigate }: { locale: Locale; slug: stri
         </div>
         {post.image ? <img alt="" className="mx-auto mt-8 max-h-[28rem] max-w-full rounded-3xl border border-white/10 object-contain shadow-2xl shadow-black/20" data-reveal src={post.image} style={revealStyle(5, 40)} /> : null}
       </header>
-      <div data-reveal style={revealStyle(0, 120)}>
+      <div>
         <MarkdownContent content={post.content} />
       </div>
-      <nav aria-label="Post pagination" className="mt-16 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-2" data-reveal style={revealStyle(1, 120)}>
+      <nav aria-label="Post pagination" className="mt-16 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-2">
         <button
           className="group rounded-3xl border border-white/10 p-5 text-left transition hover:border-violet-500/40 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/10"
           disabled={!previousPost}
