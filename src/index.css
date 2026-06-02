@@ -229,3 +229,20 @@ a {
 .theme-light .markdown-body td {
   color: #4c3f63 !important;
 }
+
+.theme-dark .group:hover .group-hover\:text-violet-200,
+.theme-dark .group:focus-within .group-hover\:text-violet-200 {
+  color: #ddd6fe !important;
+}
+
+.theme-dark .group:hover .group-hover\:text-violet-300,
+.theme-dark .group:focus-within .group-hover\:text-violet-300 {
+  color: #c4b5fd !important;
+}
+
+.theme-light .group:hover .group-hover\:text-violet-200,
+.theme-light .group:focus-within .group-hover\:text-violet-200,
+.theme-light .group:hover .group-hover\:text-violet-300,
+.theme-light .group:focus-within .group-hover\:text-violet-300 {
+  color: #7c3aed !important;
+}
