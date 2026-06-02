@@ -177,10 +177,6 @@ a {
   background-color: transparent !important;
 }
 
-.theme-light .logo-frame {
-  background-color: rgba(124, 58, 237, 0.035) !important;
-}
-
 .theme-light [class*='border-white/'] {
   border-color: rgba(124, 58, 237, 0.16) !important;
 }
