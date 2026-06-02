@@ -342,6 +342,7 @@ function HomePage() {
           period: item.period,
           logo: item.logo,
           href: item.href,
+          fullItemHref: true,
           points: [],
         }))} />
       </Section>
@@ -362,17 +363,17 @@ function Section({ children, id, index, label, order }: { children: ReactNode; i
   )
 }
 
-function Timeline({ items }: { items: Array<{ title: string; subtitle: string; period: string; logo: string; summary?: string; points: readonly ReactNode[]; href?: string }> }) {
+function Timeline({ items }: { items: Array<{ title: string; subtitle: string; period: string; logo: string; summary?: string; points: readonly ReactNode[]; href?: string; fullItemHref?: boolean }> }) {
   return (
     <div className="divide-y divide-white/10">
-      {items.map((item, index) => (
-        <article className="group py-7 first:pt-0 last:pb-0" data-reveal key={`${item.title}-${item.subtitle}-${item.period}`} style={revealStyle(index, 40, 80)}>
+      {items.map((item, index) => {
+        const content = (
           <div className="flex items-start gap-4">
             <Logo src={item.logo} alt={item.title} />
             <div className="min-w-0 flex-1">
               <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-baseline">
-                <h3 className="text-base font-semibold text-zinc-100 transition group-hover:text-violet-200">
-                  {item.href ? <a href={item.href} rel="noreferrer" target="_blank">{item.title}</a> : item.title}
+                <h3 className="text-base font-semibold text-zinc-100 transition-colors duration-300 group-hover:text-violet-200">
+                  {item.href && !item.fullItemHref ? <a href={item.href} rel="noreferrer" target="_blank">{item.title}</a> : item.title}
                 </h3>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-zinc-600">{item.period}</p>
               </div>
@@ -385,8 +386,18 @@ function Timeline({ items }: { items: Array<{ title: string; subtitle: string; p
               ) : null}
             </div>
           </div>
-        </article>
-      ))}
+        )
+
+        return (
+          <article className="group py-7 first:pt-0 last:pb-0" data-reveal key={`${item.title}-${item.subtitle}-${item.period}`} style={revealStyle(index, 40, 80)}>
+            {item.href && item.fullItemHref ? (
+              <a className="block cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/70" href={item.href} rel="noreferrer" target="_blank">
+                {content}
+              </a>
+            ) : content}
+          </article>
+        )
+      })}
     </div>
   )
 }
