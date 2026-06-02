@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { MarkdownContent } from '@/components/MarkdownContent'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+
 import { education, experience, honors, openSource, profile, socials, talks } from '@/data/site'
 import { getBlogPost, getBlogPosts, hasBlogPost } from '@/lib/blog'
 import { defaultLocale, isLocale, localeLabel, locales, type Locale } from '@/lib/i18n'
@@ -156,7 +156,7 @@ function App() {
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_72%_18%,rgba(139,92,246,0.16),transparent_28%),radial-gradient(circle_at_15%_82%,rgba(124,58,237,0.10),transparent_24%),linear-gradient(rgba(255,255,255,0.025)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100%_100%,100%_100%,72px_72px,72px_72px]" />
       <div className="relative mx-auto w-full max-w-3xl px-6 py-10 sm:px-8 sm:py-16">
         <Header route={route} theme={theme} onNavigate={navigate} onSwitchLocale={(locale) => navigate(switchLocale(route, locale))} onToggleTheme={() => setTheme((current) => current === 'dark' ? 'light' : 'dark')} />
-        {route.name === 'blog' ? <BlogPage locale={route.locale} onNavigate={navigate} /> : route.name === 'post' ? <BlogPostPage locale={route.locale} onNavigate={navigate} slug={route.slug} /> : <HomePage locale={route.locale} onNavigate={navigate} />}
+        {route.name === 'blog' ? <BlogPage locale={route.locale} onNavigate={navigate} /> : route.name === 'post' ? <BlogPostPage locale={route.locale} onNavigate={navigate} slug={route.slug} /> : <HomePage />}
       </div>
     </div>
   )
@@ -224,9 +224,7 @@ function navClass(active: boolean) {
   ].join(' ')
 }
 
-function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: Route) => void }) {
-  const t = messages[locale]
-
+function HomePage() {
   return (
     <main>
       <section className="flex min-h-[calc(100svh-15rem)] flex-col justify-between pb-20">
@@ -347,18 +345,6 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
           points: [],
         }))} />
       </Section>
-
-      <section className="py-12" data-reveal style={revealStyle(0)}>
-        <div className="flex flex-col gap-5 rounded-3xl border border-violet-500/20 bg-violet-500/[0.04] p-6 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.28em] text-violet-300">{t.writing}</p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-zinc-50">{t.readNotes}</h2>
-          </div>
-          <Button onClick={() => onNavigate({ name: 'blog', locale })} variant="outline">
-            {t.openBlog} <ArrowRight />
-          </Button>
-        </div>
-      </section>
     </main>
   )
 }
