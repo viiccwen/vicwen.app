@@ -1,5 +1,5 @@
 import { ArrowDown, ArrowRight, ExternalLink, Moon, Sun } from 'lucide-react'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 
 import { MarkdownContent } from '@/components/MarkdownContent'
@@ -120,6 +120,31 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
 
+  useEffect(() => {
+    const revealItems = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'))
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => item.classList.add('is-visible'))
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.12 },
+    )
+
+    revealItems.forEach((item) => observer.observe(item))
+    return () => observer.disconnect()
+  }, [route])
+
   function navigate(next: Route) {
     window.history.pushState({}, '', pathForRoute(next))
     setRoute(next)
@@ -141,7 +166,7 @@ function Header({ route, theme, onNavigate, onSwitchLocale, onToggleTheme }: { r
   const t = messages[route.locale]
 
   return (
-    <header className="mb-24 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-700">
+    <header className="mb-24 flex items-center justify-between" data-reveal style={revealStyle(0)}>
       <nav className="flex items-center gap-5 text-[11px] font-medium uppercase tracking-[0.28em] text-zinc-500">
         <button className={navClass(route.name === 'home')} onClick={() => onNavigate({ name: 'home', locale: route.locale })} type="button">
           {t.home}
@@ -208,18 +233,18 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
         <div />
         <div className="space-y-8">
           <div className="flex items-end justify-between gap-6">
-            <h1 className="animate-in fade-in slide-in-from-bottom-6 duration-700 text-[clamp(3.1rem,13vw,7.6rem)] font-black uppercase leading-[0.82] tracking-[-0.095em] text-zinc-50">
+            <h1 className="text-[clamp(3.1rem,13vw,7.6rem)] font-black uppercase leading-[0.82] tracking-[-0.095em] text-zinc-50" data-reveal style={revealStyle(1, 70, 90)}>
               Vic
               <br />
               Wen.
             </h1>
-            <div className="mb-2 size-20 shrink-0 animate-in fade-in zoom-in-95 duration-700 sm:size-24" style={{ animationDelay: '140ms', animationFillMode: 'both' }}>
+            <div className="mb-2 size-20 shrink-0 sm:size-24" data-reveal style={revealStyle(2, 70, 90)}>
               <div className="grid size-full place-items-center rounded-full border border-violet-500/30 bg-[conic-gradient(from_180deg,rgba(139,92,246,0.48),rgba(255,255,255,0.08),rgba(167,139,250,0.28))] p-px shadow-2xl shadow-violet-950/40">
                 <img alt={profile.portraitAlt} className="size-full rounded-full bg-neutral-950 object-cover saturate-110 transition duration-500 hover:saturate-150" src={profile.portrait} />
               </div>
             </div>
           </div>
-          <div className="flex animate-in flex-col gap-4 fade-in slide-in-from-bottom-4 duration-700 sm:flex-row sm:items-end sm:justify-between" style={{ animationDelay: '220ms', animationFillMode: 'both' }}>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between" data-reveal style={revealStyle(3, 70, 90)}>
             <p className="max-w-md text-base leading-7 text-zinc-300 sm:text-lg">{profile.headline}</p>
             <div className="flex flex-wrap items-center gap-4 text-[10px] font-medium uppercase tracking-[0.24em] text-zinc-500 sm:justify-end">
               <span>{profile.location}</span>
@@ -233,13 +258,13 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
         </div>
       </section>
 
-      <Section id="about" index="01" label="About">
+      <Section id="about" index="01" label="About" order={0}>
         <div className="space-y-5 text-base leading-8 text-zinc-400">
           <p>{profile.summary}</p>
         </div>
       </Section>
 
-      <Section id="experience" index="02" label="Experience">
+      <Section id="experience" index="02" label="Experience" order={1}>
         <Timeline items={experience.map((item) => ({
           title: item.company,
           subtitle: `${item.role} · ${item.location}`,
@@ -249,10 +274,10 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
         }))} />
       </Section>
 
-      <Section id="opensource" index="03" label="Open Source">
+      <Section id="opensource" index="03" label="Open Source" order={2}>
         <div className="divide-y divide-white/10">
-          {openSource.map((item) => (
-            <article className="group py-7 first:pt-0 last:pb-0" key={item.title}>
+          {openSource.map((item, index) => (
+            <article className="group py-7 first:pt-0 last:pb-0" data-reveal key={item.title} style={revealStyle(index, 40, 80)}>
               <div className="flex items-start gap-4">
                 <Logo src={item.logo} alt={item.title} />
                 <div className="min-w-0 flex-1">
@@ -277,7 +302,7 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
         </div>
       </Section>
 
-      <Section id="education" index="04" label="Education">
+      <Section id="education" index="04" label="Education" order={3}>
         <Timeline items={education.map((item) => ({
           title: item.school,
           subtitle: item.credential,
@@ -300,7 +325,7 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
         }))} />
       </Section>
 
-      <Section id="honors" index="05" label="Honors">
+      <Section id="honors" index="05" label="Honors" order={4}>
         <Timeline items={honors.map((item) => ({
           title: item.title,
           subtitle: item.subtitle,
@@ -312,7 +337,7 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
         }))} />
       </Section>
 
-      <Section id="talks" index="06" label="Talks">
+      <Section id="talks" index="06" label="Talks" order={5}>
         <Timeline items={talks.map((item) => ({
           title: item.title,
           subtitle: `${item.subtitle} · ${item.topic}`,
@@ -323,7 +348,7 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
         }))} />
       </Section>
 
-      <section className="py-12">
+      <section className="py-12" data-reveal style={revealStyle(0)}>
         <div className="flex flex-col gap-5 rounded-3xl border border-violet-500/20 bg-violet-500/[0.04] p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.28em] text-violet-300">{t.writing}</p>
@@ -338,9 +363,9 @@ function HomePage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
   )
 }
 
-function Section({ children, id, index, label }: { children: ReactNode; id: string; index: string; label: string }) {
+function Section({ children, id, index, label, order }: { children: ReactNode; id: string; index: string; label: string; order: number }) {
   return (
-    <section className="py-12 animate-in fade-in slide-in-from-bottom-3 duration-700" id={id}>
+    <section className="py-12" data-reveal id={id} style={revealStyle(order, 20, 55)}>
       <div className="mb-7 flex items-center gap-3">
         <h2 className="text-xs font-medium uppercase tracking-[0.28em] text-zinc-500">{label}</h2>
         <span className="font-mono text-xs text-violet-400">{index}</span>
@@ -354,8 +379,8 @@ function Section({ children, id, index, label }: { children: ReactNode; id: stri
 function Timeline({ items }: { items: Array<{ title: string; subtitle: string; period: string; logo: string; summary?: string; points: readonly ReactNode[]; href?: string }> }) {
   return (
     <div className="divide-y divide-white/10">
-      {items.map((item) => (
-        <article className="group py-7 first:pt-0 last:pb-0" key={`${item.title}-${item.subtitle}-${item.period}`}>
+      {items.map((item, index) => (
+        <article className="group py-7 first:pt-0 last:pb-0" data-reveal key={`${item.title}-${item.subtitle}-${item.period}`} style={revealStyle(index, 40, 80)}>
           <div className="flex items-start gap-4">
             <Logo src={item.logo} alt={item.title} />
             <div className="min-w-0 flex-1">
@@ -397,6 +422,10 @@ function Bullet({ children }: { children: ReactNode }) {
   )
 }
 
+function revealStyle(index: number, base = 0, step = 80): CSSProperties {
+  return { '--reveal-delay': `${base + index * step}ms` } as CSSProperties
+}
+
 const postsPerPage = 10
 
 function BlogPage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: Route) => void }) {
@@ -409,13 +438,13 @@ function BlogPage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
   const visiblePosts = posts.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage)
 
   return (
-    <main className="animate-in fade-in slide-in-from-bottom-3 duration-700">
-      <section className="mb-16">
-        <button className="mb-10 text-xs uppercase tracking-[0.28em] text-zinc-500 transition hover:text-violet-300" onClick={() => onNavigate({ name: 'home', locale })} type="button">
+    <main>
+      <section className="mb-16" data-reveal style={revealStyle(0)}>
+        <button className="mb-10 text-xs uppercase tracking-[0.28em] text-zinc-500 transition hover:text-violet-300" data-reveal onClick={() => onNavigate({ name: 'home', locale })} style={revealStyle(0, 40)} type="button">
           {t.backHome}
         </button>
-        <p className="text-xs uppercase tracking-[0.3em] text-violet-400">{t.engineeringNotes}</p>
-        <h1 className="mt-5 text-5xl font-black uppercase leading-[0.88] tracking-[-0.08em] text-zinc-50 sm:text-7xl">
+        <p className="text-xs uppercase tracking-[0.3em] text-violet-400" data-reveal style={revealStyle(1, 40)}>{t.engineeringNotes}</p>
+        <h1 className="mt-5 text-5xl font-black uppercase leading-[0.88] tracking-[-0.08em] text-zinc-50 sm:text-7xl" data-reveal style={revealStyle(2, 40)}>
           {t.blogTitleTop}
           <br />
           {t.blogTitleBottom}
@@ -423,8 +452,8 @@ function BlogPage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
       </section>
 
       <section className="border-t border-white/10">
-        {visiblePosts.map((post) => (
-          <article className="group cursor-pointer border-b border-white/10 py-8 transition-colors hover:border-violet-500/40" key={post.slug} onClick={() => onNavigate({ name: 'post', locale, slug: post.slug })}>
+        {visiblePosts.map((post, index) => (
+          <article className="group cursor-pointer border-b border-white/10 py-8 transition-colors hover:border-violet-500/40" data-reveal key={post.slug} onClick={() => onNavigate({ name: 'post', locale, slug: post.slug })} style={revealStyle(index, 70, 75)}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-zinc-600">{post.date} · {post.readingTime}</p>
@@ -443,7 +472,7 @@ function BlogPage({ locale, onNavigate }: { locale: Locale; onNavigate: (route: 
       </section>
 
       {pageCount > 1 ? (
-        <nav aria-label="Blog pagination" className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <nav aria-label="Blog pagination" className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between" data-reveal style={revealStyle(0, 120)}>
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-zinc-600">
             Page {currentPage} / {pageCount} · {posts.length} posts
           </p>
@@ -477,31 +506,33 @@ function BlogPostPage({ locale, slug, onNavigate }: { locale: Locale; slug: stri
 
   if (!post) {
     return (
-      <main className="animate-in fade-in slide-in-from-bottom-3 duration-700">
-        <button className="mb-10 text-xs uppercase tracking-[0.28em] text-zinc-500 transition hover:text-violet-300" onClick={() => onNavigate({ name: 'blog', locale })} type="button">
+      <main>
+        <button className="mb-10 text-xs uppercase tracking-[0.28em] text-zinc-500 transition hover:text-violet-300" data-reveal onClick={() => onNavigate({ name: 'blog', locale })} style={revealStyle(0)} type="button">
           {t.backBlog}
         </button>
-        <h1 className="text-4xl font-black tracking-tight text-zinc-50">{t.postNotFound}</h1>
+        <h1 className="text-4xl font-black tracking-tight text-zinc-50" data-reveal style={revealStyle(1)}>{t.postNotFound}</h1>
       </main>
     )
   }
 
   return (
-    <main className="animate-in fade-in slide-in-from-bottom-3 duration-700">
-      <button className="mb-10 text-xs uppercase tracking-[0.28em] text-zinc-500 transition hover:text-violet-300" onClick={() => onNavigate({ name: 'blog', locale })} type="button">
+    <main>
+      <button className="mb-10 text-xs uppercase tracking-[0.28em] text-zinc-500 transition hover:text-violet-300" data-reveal onClick={() => onNavigate({ name: 'blog', locale })} style={revealStyle(0)} type="button">
         {t.backBlog}
       </button>
-      <header className="mb-12 border-b border-white/10 pb-10">
-        <p className="text-xs uppercase tracking-[0.3em] text-violet-400">{post.category}</p>
-        <h1 className="mt-5 text-4xl font-black uppercase leading-[0.9] tracking-[-0.06em] text-zinc-50 sm:text-6xl">{post.title}</h1>
-        {post.excerpt ? <p className="mt-6 max-w-xl text-base leading-8 text-zinc-400">{post.excerpt}</p> : null}
-        <div className="mt-6 flex flex-wrap items-center gap-3">
+      <header className="mb-12 border-b border-white/10 pb-10" data-reveal style={revealStyle(1)}>
+        <p className="text-xs uppercase tracking-[0.3em] text-violet-400" data-reveal style={revealStyle(1, 40)}>{post.category}</p>
+        <h1 className="mt-5 text-4xl font-black uppercase leading-[0.9] tracking-[-0.06em] text-zinc-50 sm:text-6xl" data-reveal style={revealStyle(2, 40)}>{post.title}</h1>
+        {post.excerpt ? <p className="mt-6 max-w-xl text-base leading-8 text-zinc-400" data-reveal style={revealStyle(3, 40)}>{post.excerpt}</p> : null}
+        <div className="mt-6 flex flex-wrap items-center gap-3" data-reveal style={revealStyle(4, 40)}>
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-zinc-600">{post.date} · {post.readingTime}</p>
           {post.tags.map((tag) => <Badge className="post-tag" key={tag} variant="secondary">{tag}</Badge>)}
         </div>
-        {post.image ? <img alt="" className="mx-auto mt-8 max-h-[28rem] max-w-full rounded-3xl border border-white/10 object-contain shadow-2xl shadow-black/20" src={post.image} /> : null}
+        {post.image ? <img alt="" className="mx-auto mt-8 max-h-[28rem] max-w-full rounded-3xl border border-white/10 object-contain shadow-2xl shadow-black/20" data-reveal src={post.image} style={revealStyle(5, 40)} /> : null}
       </header>
-      <MarkdownContent content={post.content} />
+      <div data-reveal style={revealStyle(0, 120)}>
+        <MarkdownContent content={post.content} />
+      </div>
     </main>
   )
 }
