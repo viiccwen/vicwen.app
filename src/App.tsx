@@ -338,7 +338,7 @@ function HomePage() {
       <Section id="talks" index="06" label="Talks" order={5}>
         <Timeline items={talks.map((item) => ({
           title: item.title,
-          subtitle: `${item.subtitle} · ${item.topic}`,
+          subtitle: item.topic,
           period: item.period,
           logo: item.logo,
           href: item.href,

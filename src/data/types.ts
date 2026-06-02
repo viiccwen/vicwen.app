@@ -47,7 +47,6 @@ export type Honor = {
 
 export type Talk = {
   title: string
-  subtitle: string
   topic: string
   period: string
   logo: string
