@@ -33,7 +33,7 @@ export function AppHeader({ route, theme, onNavigate, onSwitchLocale, onToggleTh
   const t = messages[route.locale]
 
   return (
-    <header className="mb-24 flex items-center justify-between" data-reveal style={revealStyle(0)}>
+    <header className="mb-10 flex items-center justify-between sm:mb-24" data-reveal style={revealStyle(0)}>
       <nav className="flex items-center gap-5 text-[11px] font-medium uppercase tracking-[0.28em] text-zinc-500">
         <button className={navClass(route.name === 'home')} onClick={() => onNavigate({ name: 'home', locale: route.locale })} type="button">
           {t.home}
