@@ -5,8 +5,7 @@ import { revealStyle } from '@/lib/reveal'
 
 export function ProfileHero() {
   return (
-    <section className="flex flex-col pb-16 sm:min-h-[calc(100svh-15rem)] sm:justify-between sm:pb-20">
-      <div className="hidden sm:block" />
+    <section className="flex min-h-[calc(100svh-11rem)] flex-col justify-center pb-16 sm:min-h-[calc(100svh-20rem)] sm:pb-20">
       <div className="space-y-8">
         <div className="flex items-end justify-between gap-6">
           <h1 className="text-[clamp(3.1rem,13vw,7.6rem)] font-black uppercase leading-[0.82] tracking-[-0.095em] text-zinc-50" data-reveal style={revealStyle(1, 70, 90)}>
