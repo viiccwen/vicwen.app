@@ -4,7 +4,7 @@ export const profile = {
   location: 'Taipei, Taiwan',
   headline: 'Building AI infrastructure, backend systems, and open-source software with a community-first mindset.',
   summary:
-    "I am Vic, a passionate Software Engineer who loves open source contribution and community building. My work spans backend engineering, distributed systems, data infrastructure, CUDA/quantum-adjacent performance work, and developer communities.",
+    "I’m Vic, a software engineer passionate about building AI infrastructure, scalable backend systems, and open-source communities. My work spans distributed systems, data infrastructure, GPU computing, and LLM inference.",
   portrait: '/vicwen.webp',
   portraitAlt: 'Portrait of Vic Wen',
 } satisfies Profile
