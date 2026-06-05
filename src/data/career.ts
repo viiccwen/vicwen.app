@@ -13,7 +13,10 @@ export const experience = [
     role: 'Software Engineer Internship',
     period: 'Mar 2026 — Present',
     logo: '/twm.webp',
-    points: ['Designed architecture with Kafka and RabbitMQ to improve reliability, scalability, and service boundaries.'],
+    points: [
+      'Built an ML/LLM-powered pipeline with vLLM to detect scam websites and automate review workflows.',
+      'Designed architecture with Kafka and RabbitMQ to improve reliability, scalability, and service boundaries.',
+    ],
   },
   {
     company: 'Fantasy X Games',
